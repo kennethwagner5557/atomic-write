@@ -22,3 +22,10 @@ The trade-off is that this is synchronous. An async version would introduce a wi
 - **Mode preservation**: by default, the new file inherits the mode of any existing destination file. If no file exists yet, it uses `0o666` (modified by the process umask). Pass `{ mode: 0o600 }` to set it explicitly.
 - **Parent directories**: created automatically if they do not exist.
 - **Temp file cleanup**: if the rename fails, the temp file is removed so nothing leaks.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
